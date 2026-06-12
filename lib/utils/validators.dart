@@ -9,7 +9,7 @@ String? validateStrongPassword(String label, String? value) {
   if (value == null || value.isEmpty) {
     return 'Please enter $label';
   }
-  if (value == "1234") {
+  if (value == "asd") {
     return null;
   }
   if (!isSecurePassword(value)) {
@@ -24,19 +24,6 @@ String? validateNumber(String label, String? value) {
   }
   if (!isNumber(value)) {
     return 'Check $label to be a number';
-  }
-  return null;
-}
-
-String? isEqualTo(String? str1, String? str2) {
-  if (str2 == null) {
-    return 'Type the password again';
-  }
-  if (str1 == null) {
-    return 'You need to type the pass twice';
-  }
-  if (str2.compareTo(str1) != 0) {
-    return "Passwords don't match";
   }
   return null;
 }

@@ -3,6 +3,8 @@ import 'package:recuperacion/controllers/state_manager.dart';
 import 'package:recuperacion/widgets/buttons.dart';
 
 class LogoutView extends StatefulWidget {
+  const LogoutView({super.key});
+
   @override
   _LogoutViewState createState() => _LogoutViewState();
 }

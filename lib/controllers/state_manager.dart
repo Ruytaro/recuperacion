@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:recuperacion/views/login.dart';
 import 'package:recuperacion/views/logout.dart';
 import 'package:recuperacion/views/home.dart';
+import 'package:recuperacion/views/users.dart';
 import 'package:recuperacion/views/register.dart';
+import 'package:recuperacion/views/events.dart';
 
 class StateManager extends ChangeNotifier {
   static final StateManager _manager = StateManager._internal();
@@ -23,6 +25,10 @@ class StateManager extends ChangeNotifier {
 
   Widget? getScreen() {
     switch (_screen) {
+      case "users":
+        return SingleChildScrollView(child: UsersView());
+      case "events":
+        return SingleChildScrollView(child: EventsView());
       case "home":
         return SingleChildScrollView(child: HomeView());
       case "login":

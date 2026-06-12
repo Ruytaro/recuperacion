@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: GlobalKey(),
-      title: 'Flutter Project 1',
+      title: 'Recuperacion Samuel',
       theme: ThemeData(
         colorSchemeSeed: Colors.deepPurple,
         brightness: Brightness.light,

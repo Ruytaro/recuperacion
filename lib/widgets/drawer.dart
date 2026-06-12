@@ -14,10 +14,33 @@ Drawer? myDrawer() {
         children: [
           DrawerHeader(child: Text("Main Menu")),
           ElevatedButton(
+            onPressed: () => sm.set("home"),
+            child: Text("Home screen"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              sm.set("users");
+            },
+            child: Text("Manage Users"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              sm.set("events");
+            },
+            child: Text("Manage Events"),
+          ),
+          ElevatedButton(
             onPressed: () {
               sm.set("register");
             },
             child: Text("Register new user"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              um.logOut();
+              sm.set("logout");
+            },
+            child: Text("Log Out"),
           ),
         ],
       ),

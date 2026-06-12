@@ -1,36 +1,54 @@
-import 'package:recuperacion/models/event.dart';
+import 'package:recuperacion/models/ticket.dart';
 
 class User {
   String username;
-  String password;
+  String _password;
   String avatar;
   int age;
   String pronoum;
   String province;
-  bool admin;
-  bool disabled;
+  bool _admin = false;
+  bool _disabled = false;
 
-  List<Event> registered = List.empty(growable: true);
+  List<Ticket> tickets = [];
 
   User(
     this.username,
-    this.password, {
+    this._password, {
     this.avatar = "images/avatar.png",
     this.age = 33,
     this.pronoum = "Any",
     this.province = "Huesca",
-    this.admin = false,
-    this.disabled = false,
   });
 
   bool checkLogin(String name, String pass) {
-    if (username == name) {
+    if (username == name && _disabled == false) {
       return _isPasswordRight(pass);
     }
     return false;
   }
 
   bool _isPasswordRight(String pass) {
-    return pass == password;
+    return pass == _password;
+  }
+
+  String getPassword() {
+    return _password;
+  }
+
+  void setAdmin(bool admin) {
+    _admin = admin;
+  }
+
+  void setDisabled(bool disabled) {
+    _disabled = disabled;
+  }
+
+  bool isAdmin() {
+    return _admin;
+  }
+
+  bool isDisabled() {
+    return _disabled;
   }
 }

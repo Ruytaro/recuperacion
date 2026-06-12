@@ -32,7 +32,6 @@ class _LoginViewState extends State<LoginView> {
 
   Future<void> _showPassword(String? username) async {
     if (!mounted) return;
-
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -107,9 +106,10 @@ class _LoginViewState extends State<LoginView> {
     }
     try {
       if (_userManager.logIn(_name, _pass)) {
-        _stateManager.set("main");
+        _stateManager.set("home");
         Notifications.showMessage(context, "Logged in successfully");
       } else {
+        _stateManager.set("login");
         Notifications.showError(context, "Check credentials");
       }
     } catch (e) {

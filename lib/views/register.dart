@@ -31,13 +31,14 @@ class _RegisterViewState extends State<RegisterView> {
   void doRegister() {
     if (!formKey.currentState!.validate()) {
       Notifications.showError(context, "Review the form");
+      return;
     }
     User newUser = User(name, pass);
-    newUser.admin = admin;
+    newUser.setAdmin(admin);
 
     if (um.register(newUser)) {
       Notifications.showMessage(context, "Account created");
-      sm.set("login");
+      sm.set("home");
     } else {
       Notifications.showError(context, "Check user data");
     }
@@ -90,15 +91,18 @@ class _RegisterViewState extends State<RegisterView> {
             if (_imagePath != "") myImageFile(_imagePath, 256),
             myFormField((v) => age, "Type your age", validator: validateNumber),
             if (um.isAdmin())
-              Center(
-                child: Row(
-                  children: [
-                    Text("Give admin"),
-                    Checkbox(value: admin, onChanged: (value) => admin),
-                  ],
+              SizedBox(
+                width: 300,
+                child: CheckboxListTile(
+                  title: Text("Give admin to the new user"),
+                  value: admin,
+                  onChanged: (value) {
+                    setState(() {
+                      admin = value!;
+                    });
+                  },
                 ),
               ),
-
             myElevatedButton(doRegister, Text("Create account")),
             if (!um.isLogged())
               myElevatedButton(() {

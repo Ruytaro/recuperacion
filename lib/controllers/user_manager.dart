@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:js_interop';
 import 'package:flutter/material.dart';
 
 import '../models/user.dart';
@@ -27,7 +28,18 @@ class UserManager {
     if (_currentUser?.username == "admin") {
       return true;
     }
-    return _currentUser!.admin;
+    return _currentUser!.isAdmin();
+  }
+
+  bool userIsAdmin(String name) {
+    if (name == "admin") {
+      return true;
+    }
+    User? user = _users[name];
+    if (user == null) {
+      return false;
+    }
+    return user.isAdmin();
   }
 
   bool register(User user) {
@@ -36,7 +48,9 @@ class UserManager {
       return false;
     }
     _users[name] = user;
-    _currentUser = user;
+    if (!isLogged()) {
+      _currentUser = user;
+    }
     return true;
   }
 
@@ -51,7 +65,7 @@ class UserManager {
   }
 
   Widget recoverPassword(String? username) {
-    var pass = _users[username]?.password;
+    var pass = _users[username]?.getPassword();
     if (pass != null) {
       return Text("It's password is: $pass");
     }
@@ -84,14 +98,48 @@ class UserManager {
     return true;
   }
 
-  bool toggleUser(String username) {
-    if (username == "admin" || username == _currentUser?.username) {
-      return false;
+  void setUserState(String username, bool disabled) {
+    if (username == "admin") {
+      throw Exception('User can\'t be modified!');
     }
     if (!_users.containsKey(username)) {
+      throw Exception('User not found!');
+    }
+    if (username == _currentUser?.username) {
+      throw Exception('You can\'t modify your own user!');
+    }
+    _users[username]!.setDisabled(disabled);
+  }
+
+  void setUserAdmin(String username, bool admin) {
+    if (username == "admin") {
+      throw Exception('User can\'t be modified!');
+    }
+    if (!_users.containsKey(username)) {
+      throw Exception('User not found!');
+    }
+    if (username == _currentUser?.username) {
+      throw Exception('You can\'t modify your own user!');
+    }
+    _users[username]!.setAdmin(admin);
+  }
+
+  List<String> getUsers() {
+    return _users.keys.toList(growable: false);
+  }
+
+  User getUser(String id) {
+    return _users[id]!;
+  }
+
+  bool userIsDisabled(String name) {
+    if (name == "admin") {
       return false;
     }
-    _users[username]!.disabled = !_users[username]!.disabled;
-    return true;
+    User? user = _users[name];
+    if (user == null) {
+      return true;
+    }
+    return user.isDisabled();
   }
 }

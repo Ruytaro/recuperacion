@@ -3,9 +3,11 @@ import 'package:recuperacion/controllers/event_manager.dart';
 import 'package:recuperacion/controllers/user_manager.dart';
 import 'package:recuperacion/controllers/state_manager.dart';
 import 'package:recuperacion/models/event.dart';
+import 'package:recuperacion/utils/validators.dart';
 import 'package:recuperacion/widgets/buttons.dart';
 import 'package:recuperacion/utils/notifications.dart';
 import 'package:recuperacion/models/user.dart';
+import 'package:recuperacion/widgets/forms.dart';
 
 class EventsView extends StatefulWidget {
   const EventsView({super.key});
@@ -28,6 +30,7 @@ class _EventsViewState extends State<EventsView> {
     sm = StateManager();
     um = UserManager();
     me = um.getCurrentUser!;
+    events = em.getEvents();
   }
 
   void _refreshEvents() {
@@ -38,31 +41,33 @@ class _EventsViewState extends State<EventsView> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> users = um.getUsers();
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 200),
         child: Column(
           children: [
-            Text("Manage Users", textScaler: .linear(1.5)),
+            Text("Manage Events", textScaler: .linear(1.5)),
             ListView.builder(
               shrinkWrap: true,
               //   physics: const NeverScrollableScrollPhysics(),
-              itemCount: users.length,
+              itemCount: events.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(users[index]),
+                  title: Text(events[index].getName()),
                   leading: Icon(
-                    (um.userIsAdmin(users[index]))
-                        ? Icons.shield
+                    (events[index].ticketsAvailable())
+                        ? Icons.block
                         : Icons.person,
-                    color: (um.userIsDisabled(users[index]))
-                        ? Colors.red
-                        : Colors.green,
                   ),
-                  onTap: () => _showEditDialog(context, users[index]),
+                  //onTap: () => _showEditDialog(context, events[index]),
                 );
               },
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _showCreateDialog(context);
+              },
+              child: const Text("Create Event"),
             ),
           ],
         ),
@@ -70,10 +75,55 @@ class _EventsViewState extends State<EventsView> {
     );
   }
 
-  void _showEditDialog(BuildContext context, String name) {
-    User target = um.getUser(name);
-    bool admin = um.userIsAdmin(name);
-    bool disabled = target.isDisabled();
+  void _showCreateDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, setState) {
+            late String name;
+            late String capacity;
+            return AlertDialog(
+              title: const Text('Create event'),
+              content: Column(
+                mainAxisSize: .min,
+                children: [
+                  myFormField((value) => name = value, "Event Name"),
+                  myFormField(
+                    (value) => capacity = value,
+                    "Event Capacity",
+                    validator: validateNumber,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                myElevatedButton(() {
+                  try {
+                    em.addEvent(Event(name, int.parse(capacity)));
+                    Notifications.showMessage(
+                      context,
+                      "Event Created Succesfully",
+                    );
+                  } catch (e) {
+                    Notifications.showError(context, e.toString());
+                  }
+                  Navigator.pop(context);
+                  _refreshEvents();
+                }, Text("Save")),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  /*
+  void _showEditDialog(BuildContext context, Event event) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -129,5 +179,5 @@ class _EventsViewState extends State<EventsView> {
         );
       },
     );
-  }
+  }*/
 }

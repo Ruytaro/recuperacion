@@ -1,21 +1,13 @@
 import 'dart:collection';
-import 'dart:js_interop';
-import 'package:flutter/material.dart';
 
 import '../models/user.dart';
 
 class UserManager {
-  static final UserManager _manager = UserManager._internal();
+  static const String adminUser = "admin";
 
-  final Map<String, User> _users = HashMap();
-  User? _currentUser;
+  static final Map<String, User> _users = HashMap();
+  static User? _currentUser;
   User? get getCurrentUser => _currentUser;
-
-  UserManager._internal();
-
-  factory UserManager() {
-    return _manager;
-  }
 
   bool isLogged() {
     return _currentUser != null;
@@ -25,14 +17,14 @@ class UserManager {
     if (_currentUser == null) {
       return false;
     }
-    if (_currentUser?.username == "admin") {
+    if (_currentUser?.username == adminUser) {
       return true;
     }
     return _currentUser!.isAdmin();
   }
 
   bool userIsAdmin(String name) {
-    if (name == "admin") {
+    if (name == adminUser) {
       return true;
     }
     User? user = _users[name];
@@ -48,9 +40,6 @@ class UserManager {
       return false;
     }
     _users[name] = user;
-    if (!isLogged()) {
-      _currentUser = user;
-    }
     return true;
   }
 
@@ -64,20 +53,16 @@ class UserManager {
     return loginFailed;
   }
 
-  Widget recoverPassword(String? username) {
-    var pass = _users[username]?.getPassword();
-    if (pass != null) {
-      return Text("It's password is: $pass");
-    }
-    return Text("User not found");
+  String? recoverPassword(String username) {
+    return _users[username]?.getPassword();
   }
 
   bool logIn(String username, String password) {
-    if (!_users.containsKey(username)) {
+    User? user = _users[username];
+    if (user == null) {
       loginFailed = true;
       return false;
     }
-    User user = _users[username]!;
     if (user.checkLogin(username, password)) {
       _currentUser = user;
       loginFailed = false;
@@ -87,19 +72,18 @@ class UserManager {
     return false;
   }
 
-  bool deleteUser(String username) {
-    if (username == "admin" || username == _currentUser?.username) {
-      return false;
+  void deleteUser(String username) {
+    if (username == adminUser || username == _currentUser?.username) {
+      throw Exception('User can\'t be deleted!');
     }
     var user = _users.remove(username);
     if (user == null) {
-      return false;
+      throw Exception('User not found!');
     }
-    return true;
   }
 
   void setUserState(String username, bool disabled) {
-    if (username == "admin") {
+    if (username == adminUser) {
       throw Exception('User can\'t be modified!');
     }
     if (!_users.containsKey(username)) {
@@ -112,7 +96,7 @@ class UserManager {
   }
 
   void setUserAdmin(String username, bool admin) {
-    if (username == "admin") {
+    if (username == adminUser) {
       throw Exception('User can\'t be modified!');
     }
     if (!_users.containsKey(username)) {
@@ -133,7 +117,7 @@ class UserManager {
   }
 
   bool userIsDisabled(String name) {
-    if (name == "admin") {
+    if (name == adminUser) {
       return false;
     }
     User? user = _users[name];

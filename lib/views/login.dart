@@ -30,6 +30,15 @@ class _LoginViewState extends State<LoginView> {
     _stateManager = StateManager();
   }
 
+  Widget _getPassword(String username) {
+    String? pass = _userManager.recoverPassword(username);
+    if (pass != null) {
+      return Text("Password is: $pass");
+    } else {
+      return Text("User not found");
+    }
+  }
+
   Future<void> _showPassword(String? username) async {
     if (!mounted) return;
     return showDialog<void>(
@@ -42,7 +51,7 @@ class _LoginViewState extends State<LoginView> {
             child: ListBody(
               children: <Widget>[
                 Text("This is what we know about $username"),
-                _userManager.recoverPassword(username),
+                _getPassword(username!),
               ],
             ),
           ),

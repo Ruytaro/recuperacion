@@ -4,17 +4,17 @@ import 'package:recuperacion/models/user.dart';
 enum TicketStatus { pending, paid, refunded, canceled }
 
 class Ticket {
-  User owner;
-  Event event;
+  final User _owner;
+  final Event _event;
   TicketStatus _status = .pending;
-  Ticket(this.owner, this.event);
+  Ticket(this._owner, this._event);
 
   User getOwner() {
-    return owner;
+    return _owner;
   }
 
   Event getEvent() {
-    return event;
+    return _event;
   }
 
   void setState(TicketStatus state) {

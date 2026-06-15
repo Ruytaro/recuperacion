@@ -28,17 +28,37 @@ class _RegisterViewState extends State<RegisterView> {
   final GalleryService _galleryService = GalleryService();
   String _imagePath = "";
   bool admin = false;
+
+  void _initForm() {
+    setState(() {
+      name = "";
+      pass = "";
+      pass2 = "";
+      age = "";
+      _imagePath = "";
+      admin = false;
+      formKey.currentState?.reset(); // Reset form validation state
+    });
+  }
+
   void doRegister() {
     if (!formKey.currentState!.validate()) {
       Notifications.showError(context, "Review the form");
       return;
     }
+
     User newUser = User(name, pass);
     newUser.setAdmin(admin);
 
     if (um.register(newUser)) {
       Notifications.showMessage(context, "Account created");
-      sm.set("home");
+      _initForm(); // Clean fields after successful registration
+
+      if (!um.isLogged()) {
+        if (um.logIn(newUser.username, newUser.getPassword())) {
+          sm.set("home");
+        }
+      }
     } else {
       Notifications.showError(context, "Check user data");
     }
@@ -47,7 +67,7 @@ class _RegisterViewState extends State<RegisterView> {
   Future<void> _handleTakePhoto() async {
     final path = await _galleryService.takePhoto();
     setState(() {
-      _imagePath = path!;
+      _imagePath = path ?? "";
     });
   }
 
@@ -72,7 +92,9 @@ class _RegisterViewState extends State<RegisterView> {
             ),
             edgePadding(
               TextFormField(
-                onChanged: (value) => pass2,
+                onChanged: (value) {
+                  pass2 = value; // FIXED: Actually update pass2
+                },
                 validator: (value) {
                   if (value != pass) {
                     return "Retype the password!";
@@ -89,7 +111,11 @@ class _RegisterViewState extends State<RegisterView> {
             ),
             myElevatedButton(() => _handleTakePhoto(), Text("Set avatar")),
             if (_imagePath != "") myImageFile(_imagePath, 256),
-            myFormField((v) => age, "Type your age", validator: validateNumber),
+            myFormField(
+              (v) => age = v,
+              "Type your age",
+              validator: validateNumber,
+            ),
             if (um.isAdmin())
               SizedBox(
                 width: 300,
@@ -104,10 +130,7 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
               ),
             myElevatedButton(doRegister, Text("Create account")),
-            if (!um.isLogged())
-              myElevatedButton(() {
-                sm.set("Login");
-              }, Text("Go to Login")),
+            // Optional: Add a clear button
           ],
         ),
       ),

@@ -119,6 +119,18 @@ class _UsersViewState extends State<UsersView> {
                     _refreshUsers();
                   });
                 }, Text("Save")),
+                myElevatedButton(() {
+                  setState(() {
+                    try {
+                      um.deleteUser(name);
+                      Notifications.showMessage(context, "User Deleted");
+                    } catch (e) {
+                      Notifications.showError(context, e.toString());
+                    }
+                    Navigator.pop(context);
+                    _refreshUsers();
+                  });
+                }, Text("Delete User", style: TextStyle(color: Colors.red))),
               ],
             );
           },

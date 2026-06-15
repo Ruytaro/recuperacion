@@ -2,7 +2,7 @@ import 'package:recuperacion/models/ticket.dart';
 
 class User {
   String username;
-  String _password;
+  final String _password;
   String avatar;
   int age;
   String pronoum;

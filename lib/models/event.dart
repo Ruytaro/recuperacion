@@ -4,27 +4,39 @@ import 'package:recuperacion/models/user.dart';
 enum EventStatus { planned, ongoing, finished, canceled }
 
 class Event {
-  String name;
-  int eventCapacity;
-  int ticketsSold = 0;
-  EventStatus status = .planned;
-  Event(this.name, this.eventCapacity);
+  final String _name;
+  final int _eventCapacity;
+  int _ticketsSold = 0;
+  EventStatus _status = .planned;
+  Event(this._name, this._eventCapacity);
   List<Ticket> tickets = [];
 
   void updateState(EventStatus status) {
-    this.status = status;
+    _status = status;
+  }
+
+  bool isSoldOut() {
+    return ticketsLeft() < 1;
   }
 
   int ticketsLeft() {
-    return eventCapacity - ticketsSold;
+    return _eventCapacity - _ticketsSold;
+  }
+
+  bool ticketsAvailable() {
+    return !isSoldOut() && _status == .planned;
+  }
+
+  String getName() {
+    return _name;
   }
 
   bool sellTicket(User buyer, int amount) {
     if (amount < 1) return false;
-    if (eventCapacity < amount) {
+    if (_eventCapacity < amount) {
       return false;
     }
-    ticketsSold += amount;
+    _ticketsSold += amount;
     for (int i = 0; i < amount; i++) {
       tickets.add(Ticket(buyer, this));
     }

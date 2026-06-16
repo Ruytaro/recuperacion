@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     um.register(User("Tunombre", "Tunombre"));
     um.register(User("asd", "asd"));
     um.register(User("test", "asd"));
-    em.addEvent(Event("test", 4));
+    em.setEvent(Event("test", 4, 22, "Test event"));
   }
 
   @override

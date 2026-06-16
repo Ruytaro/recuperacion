@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recuperacion/views/login.dart';
 import 'package:recuperacion/views/logout.dart';
 import 'package:recuperacion/views/home.dart';
+import 'package:recuperacion/views/tickets.dart';
 import 'package:recuperacion/views/users.dart';
 import 'package:recuperacion/views/register.dart';
 import 'package:recuperacion/views/events.dart';
@@ -29,6 +30,8 @@ class StateManager extends ChangeNotifier {
         return SingleChildScrollView(child: UsersView());
       case "events":
         return SingleChildScrollView(child: EventsView());
+      case "tickets":
+        return SingleChildScrollView(child: TicketsView());
       case "home":
         return SingleChildScrollView(child: HomeView());
       case "login":

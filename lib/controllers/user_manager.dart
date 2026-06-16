@@ -109,7 +109,13 @@ class UserManager {
   }
 
   List<String> getUsers() {
-    return _users.keys.toList(growable: false);
+    List<String> users = [];
+    for (String name in _users.keys) {
+      if (name != adminUser) {
+        users.add(name);
+      }
+    }
+    return users;
   }
 
   User getUser(String id) {

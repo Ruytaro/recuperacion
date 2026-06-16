@@ -35,7 +35,7 @@ class _EventsViewState extends State<EventsView> {
 
   void _refreshEvents() {
     setState(() {
-      events = em.getEvents(); // Refresh the list
+      events = em.getEvents();
     });
   }
 
@@ -49,17 +49,16 @@ class _EventsViewState extends State<EventsView> {
             Text("Manage Events", textScaler: .linear(1.5)),
             ListView.builder(
               shrinkWrap: true,
-              //   physics: const NeverScrollableScrollPhysics(),
               itemCount: events.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(events[index].getName()),
+                  title: Text(events[index].name),
                   leading: Icon(
                     (events[index].ticketsAvailable())
-                        ? Icons.block
-                        : Icons.person,
+                        ? Icons.check
+                        : Icons.block,
                   ),
-                  //onTap: () => _showEditDialog(context, events[index]),
+                  onTap: () => _showEditDialog(context, events[index]),
                 );
               },
             ),
@@ -103,7 +102,9 @@ class _EventsViewState extends State<EventsView> {
                 ),
                 myElevatedButton(() {
                   try {
-                    em.addEvent(Event(name, int.parse(capacity)));
+                    em.setEvent(
+                      Event(name, int.parse(capacity), 22, "placeholder"),
+                    );
                     Notifications.showMessage(
                       context,
                       "Event Created Succesfully",
@@ -122,7 +123,6 @@ class _EventsViewState extends State<EventsView> {
     );
   }
 
-  /*
   void _showEditDialog(BuildContext context, Event event) {
     showDialog(
       context: context,
@@ -130,27 +130,30 @@ class _EventsViewState extends State<EventsView> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
-              title: const Text('Edit User'),
+              title: Text('Editing event ${event.name}'),
               content: Column(
                 mainAxisSize: .min,
                 children: [
-                  CheckboxListTile(
-                    title: Text("Administrator"),
-                    value: admin,
-                    onChanged: (value) {
-                      setState(() {
-                        admin = value!;
-                      });
-                    },
+                  DropdownButtonFormField<EventStatus>(
+                    initialValue: event.status,
+                    items: EventStatus.values.map((EventStatus value) {
+                      String displayName = value.toString().split('.').last;
+                      return DropdownMenuItem<EventStatus>(
+                        value: value,
+                        child: Row(children: [Text(displayName)]),
+                      );
+                    }).toList(),
+                    onChanged: (value) => event.status = value!,
                   ),
-                  CheckboxListTile(
-                    title: Text("Disable user"),
-                    value: disabled,
-                    onChanged: (value) {
-                      setState(() {
-                        disabled = value!;
-                      });
-                    },
+                  myFormField(
+                    (value) => event.capacity = value,
+                    "Event capacity: ${event.capacity}",
+                    validator: isNumber,
+                  ),
+                  myFormField(
+                    (value) => event.cost = value,
+                    "Ticket cost:  ${event.cost}",
+                    validator: isNumber,
                   ),
                 ],
               ),
@@ -162,12 +165,10 @@ class _EventsViewState extends State<EventsView> {
                 myElevatedButton(() {
                   setState(() {
                     try {
-                      um.setUserState(name, disabled);
-                      um.setUserAdmin(name, admin);
-                      Notifications.showMessage(context, "User updated");
+                      em.setEvent(event);
+                      Notifications.showMessage(context, "Event updated");
                     } catch (e) {
                       Notifications.showError(context, e.toString());
-                      rethrow;
                     }
                     Navigator.pop(context);
                     _refreshEvents();
@@ -179,5 +180,7 @@ class _EventsViewState extends State<EventsView> {
         );
       },
     );
-  }*/
+  }
+
+  void updateEvent(String? value) {}
 }

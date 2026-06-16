@@ -4,6 +4,7 @@ import 'package:recuperacion/controllers/state_manager.dart';
 import 'package:recuperacion/widgets/buttons.dart';
 import 'package:recuperacion/utils/notifications.dart';
 import 'package:recuperacion/models/user.dart';
+import 'package:recuperacion/widgets/forms.dart';
 
 class UsersView extends StatefulWidget {
   const UsersView({super.key});
@@ -29,7 +30,7 @@ class _UsersViewState extends State<UsersView> {
 
   void _refreshUsers() {
     setState(() {
-      users = um.getUsers(); // Refresh the list
+      users = um.getUsers();
     });
   }
 
@@ -44,7 +45,6 @@ class _UsersViewState extends State<UsersView> {
             Text("Manage Users", textScaler: .linear(1.5)),
             ListView.builder(
               shrinkWrap: true,
-              //   physics: const NeverScrollableScrollPhysics(),
               itemCount: users.length,
               itemBuilder: (context, index) {
                 return ListTile(
@@ -71,6 +71,7 @@ class _UsersViewState extends State<UsersView> {
     User target = um.getUser(name);
     bool admin = um.userIsAdmin(name);
     bool disabled = target.isDisabled();
+    bool enableDelete = false;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -99,6 +100,15 @@ class _UsersViewState extends State<UsersView> {
                       });
                     },
                   ),
+                  CheckboxListTile(
+                    title: Text("Delete user"),
+                    value: enableDelete,
+                    onChanged: (value) {
+                      setState(() {
+                        enableDelete = value!;
+                      });
+                    },
+                  ),
                 ],
               ),
               actions: [
@@ -106,6 +116,20 @@ class _UsersViewState extends State<UsersView> {
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Cancel'),
                 ),
+                myElevatedButton(() {
+                  if (enableDelete) {
+                    setState(() {
+                      try {
+                        um.deleteUser(name);
+                        Notifications.showMessage(context, "User Deleted");
+                      } catch (e) {
+                        Notifications.showError(context, e.toString());
+                      }
+                      Navigator.pop(context);
+                      _refreshUsers();
+                    });
+                  }
+                }, Text("Delete User", style: TextStyle(color: Colors.red))),
                 myElevatedButton(() {
                   setState(() {
                     try {
@@ -119,18 +143,6 @@ class _UsersViewState extends State<UsersView> {
                     _refreshUsers();
                   });
                 }, Text("Save")),
-                myElevatedButton(() {
-                  setState(() {
-                    try {
-                      um.deleteUser(name);
-                      Notifications.showMessage(context, "User Deleted");
-                    } catch (e) {
-                      Notifications.showError(context, e.toString());
-                    }
-                    Navigator.pop(context);
-                    _refreshUsers();
-                  });
-                }, Text("Delete User", style: TextStyle(color: Colors.red))),
               ],
             );
           },

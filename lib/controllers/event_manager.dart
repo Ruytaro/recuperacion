@@ -1,9 +1,10 @@
+import 'dart:collection';
+
 import 'package:recuperacion/models/event.dart';
 
 class EventManager {
   static final EventManager _manager = EventManager._internal();
-
-  static final List<Event> _events = [];
+  static final Map<int, Event> _events = HashMap();
 
   EventManager._internal();
 
@@ -12,15 +13,10 @@ class EventManager {
   }
 
   List<Event> getEvents() {
-    return _events;
+    return _events.values.toList();
   }
 
-  void addEvent(Event event) {
-    for (Event ev in _events) {
-      if (ev.getName() == event.getName()) {
-        throw Exception('That event already exists!');
-      }
-    }
-    _events.add(event);
+  void setEvent(Event event) {
+    _events[event.id] = event;
   }
 }

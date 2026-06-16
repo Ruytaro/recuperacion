@@ -31,6 +31,12 @@ Drawer? myDrawer() {
           ),
           ElevatedButton(
             onPressed: () {
+              sm.set("tickets");
+            },
+            child: Text("Manage Tickets"),
+          ),
+          ElevatedButton(
+            onPressed: () {
               sm.set("register");
             },
             child: Text("Register new user"),
@@ -47,7 +53,18 @@ Drawer? myDrawer() {
     );
   } else {
     return Drawer(
-      child: Column(children: [DrawerHeader(child: Text("User menu"))]),
+      child: Column(
+        children: [
+          DrawerHeader(child: Text("User menu")),
+          ElevatedButton(
+            onPressed: () {
+              um.logOut();
+              sm.set("logout");
+            },
+            child: Text("Log Out"),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -4,16 +4,15 @@ import 'package:recuperacion/controllers/state_manager.dart';
 import 'package:recuperacion/widgets/buttons.dart';
 import 'package:recuperacion/utils/notifications.dart';
 import 'package:recuperacion/models/user.dart';
-import 'package:recuperacion/widgets/forms.dart';
 
 class UsersView extends StatefulWidget {
   const UsersView({super.key});
 
   @override
-  _UsersViewState createState() => _UsersViewState();
+  UsersViewState createState() => UsersViewState();
 }
 
-class _UsersViewState extends State<UsersView> {
+class UsersViewState extends State<UsersView> {
   late UserManager um;
   late StateManager sm;
   late User me;

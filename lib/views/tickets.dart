@@ -3,22 +3,19 @@ import 'package:recuperacion/controllers/event_manager.dart';
 import 'package:recuperacion/controllers/ticket_manager.dart';
 import 'package:recuperacion/controllers/user_manager.dart';
 import 'package:recuperacion/controllers/state_manager.dart';
-import 'package:recuperacion/models/event.dart';
 import 'package:recuperacion/models/ticket.dart';
-import 'package:recuperacion/utils/validators.dart';
 import 'package:recuperacion/widgets/buttons.dart';
 import 'package:recuperacion/utils/notifications.dart';
 import 'package:recuperacion/models/user.dart';
-import 'package:recuperacion/widgets/forms.dart';
 
 class TicketsView extends StatefulWidget {
   const TicketsView({super.key});
 
   @override
-  _TicketsViewState createState() => _TicketsViewState();
+  TicketsViewState createState() => TicketsViewState();
 }
 
-class _TicketsViewState extends State<TicketsView> {
+class TicketsViewState extends State<TicketsView> {
   late TicketManager tm;
   late EventManager em;
   late StateManager sm;
@@ -77,9 +74,8 @@ class _TicketsViewState extends State<TicketsView> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            TicketStatus status = ticket.status;
             return AlertDialog(
-              title: Text('Editing event'),
+              title: Text('Editing ticket status'),
               content: Column(
                 mainAxisSize: .min,
                 children: [
@@ -92,7 +88,7 @@ class _TicketsViewState extends State<TicketsView> {
                         child: Row(children: [Text(displayName)]),
                       );
                     }).toList(),
-                    onChanged: (value) => status = value!,
+                    onChanged: (value) => ticket.status = value!,
                   ),
                 ],
               ),

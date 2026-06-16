@@ -6,10 +6,10 @@ class LogoutView extends StatefulWidget {
   const LogoutView({super.key});
 
   @override
-  _LogoutViewState createState() => _LogoutViewState();
+  LogoutViewState createState() => LogoutViewState();
 }
 
-class _LogoutViewState extends State<LogoutView> {
+class LogoutViewState extends State<LogoutView> {
   late StateManager sm;
 
   @override

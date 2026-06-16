@@ -9,10 +9,10 @@ class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
-  _HomeViewState createState() => _HomeViewState();
+  HomeViewState createState() => HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class HomeViewState extends State<HomeView> {
   late UserManager um;
   late StateManager sm;
   late User me;

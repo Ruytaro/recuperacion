@@ -1,5 +1,3 @@
-import 'package:recuperacion/controllers/ticket_manager.dart';
-import 'package:recuperacion/models/ticket.dart';
 import 'package:recuperacion/models/user.dart';
 
 enum EventStatus { planned, ongoing, finished }

@@ -13,10 +13,10 @@ class EventsView extends StatefulWidget {
   const EventsView({super.key});
 
   @override
-  _EventsViewState createState() => _EventsViewState();
+  EventsViewState createState() => EventsViewState();
 }
 
-class _EventsViewState extends State<EventsView> {
+class EventsViewState extends State<EventsView> {
   late EventManager em;
   late StateManager sm;
   late UserManager um;

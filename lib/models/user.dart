@@ -2,7 +2,7 @@ import 'package:recuperacion/models/ticket.dart';
 
 class User {
   String username;
-  final String _password;
+  String _password;
   String avatar;
   int age;
   String pronoum;
@@ -46,6 +46,10 @@ class User {
 
   bool isAdmin() {
     return _admin;
+  }
+
+  bool equals(User user) {
+    return username == user.username;
   }
 
   bool isDisabled() {

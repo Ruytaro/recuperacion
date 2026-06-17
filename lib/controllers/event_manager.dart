@@ -16,6 +16,16 @@ class EventManager {
     return _events.values.toList();
   }
 
+  List<Event> getEventsAvalilable() {
+    List<Event> events = [];
+    for (Event event in _events.values) {
+      if (event.status == .planned) {
+        events.add(event);
+      }
+    }
+    return events;
+  }
+
   void setEvent(Event event) {
     _events[event.id] = event;
   }

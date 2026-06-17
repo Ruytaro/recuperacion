@@ -1,3 +1,5 @@
+import 'package:recuperacion/controllers/ticket_manager.dart';
+import 'package:recuperacion/models/ticket.dart';
 import 'package:recuperacion/models/user.dart';
 
 enum EventStatus { planned, ongoing, finished }
@@ -23,18 +25,24 @@ class Event {
   }
 
   bool ticketsAvailable() {
-    return !isSoldOut() && status == .planned;
+    return status == .planned;
   }
 
-  bool sellTicket(User buyer) {
-    if (isSoldOut()) {
-      return false;
-    }
+  void sellTicket(User buyer) {
     ticketsSold++;
-    return true;
+    TicketManager().setTicket(Ticket(buyer, this));
   }
 
   bool isEqual(Event event) {
     return id == event.id;
+  }
+
+  bool userHasTicket(User buyer) {
+    for (Ticket ticket in TicketManager().getUserTickets(buyer)) {
+      if (ticket.owner.equals(buyer)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

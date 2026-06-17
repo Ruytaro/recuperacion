@@ -44,7 +44,7 @@ class TicketsViewState extends State<TicketsView> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 200),
+        constraints: BoxConstraints(maxWidth: 500),
         child: Column(
           children: [
             Text("Manage Tickets", textScaler: .linear(1.5)),
